@@ -14,13 +14,17 @@ import { SanitizeInput } from 'src/validations/sanitize';
 import { ObjectIdValidationPipe } from 'src/pipe/mongo-id.pipe';
 import { CreateUserDto, UpdateUserDto } from './users.dto';
 import { AuthenticationGuard } from 'src/shared/guard/authentication.guard';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('users')
 @UseGuards(AuthenticationGuard)
+@ApiTags("users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create new user' })
   async create(@Body() data: CreateUserDto) {
     // check parameters
     const checkUsername = await this.usersService.findByUsername(data.username);
@@ -37,6 +41,8 @@ export class UsersController {
   }
 
   @Post("/upload")
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Upload file - Doesnt work, its just for test' })
   async uploadFile() {
    // example endpoint
 
@@ -44,6 +50,8 @@ export class UsersController {
   }
 
   @Get()
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'List all users' })
   async findAll() {
     const response = await this.usersService.findAll();
 
@@ -51,6 +59,8 @@ export class UsersController {
   }
 
   @Get(':id')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get user by id' })
   async findOne(@Param('id',ObjectIdValidationPipe) id: string) {
     const response = await this.usersService.findById(id);
 
@@ -58,6 +68,8 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update user by id' })
   update(@Param('id',ObjectIdValidationPipe) id: string, @Body() data: UpdateUserDto) {
 
     //Sanitize inputs:
@@ -67,6 +79,8 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete user by id' })
   async remove(@Param('id',ObjectIdValidationPipe) id: string) {
     const response = await this.usersService.remove(id);
     return { statusCode: 200, result: response };
