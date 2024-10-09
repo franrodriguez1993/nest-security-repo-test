@@ -1,15 +1,22 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
+import helmet from 'helmet';
 import { UsersModule } from './modules/users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongoConfigModule } from './database/mongo.module';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({isGlobal:true}),
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     UsersModule,
-    MongoConfigModule],
-  controllers: [AppController],
-  providers: [AppService],
+    MongoConfigModule,
+    SharedModule
+  ],
+  controllers: [],
+  providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(helmet()).forRoutes('*');
+  }
+}

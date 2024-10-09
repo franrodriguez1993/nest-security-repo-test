@@ -16,7 +16,7 @@ export class Users {
   @Prop({ required: true })
   email: string;
 
-  @Prop({ required: true})
+  @Prop({ required: true })
   birthday: string;
 }
 
