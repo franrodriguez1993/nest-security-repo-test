@@ -55,7 +55,7 @@ export class UsersController {
   async findAll() {
     const response = await this.usersService.findAll();
 
-    return { statusCode: 200, result: response };
+    return { statusCode: 200,pid:process.pid, result: response };
   }
 
   @Get(':id')
